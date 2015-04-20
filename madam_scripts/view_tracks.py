@@ -1,4 +1,4 @@
-#!/usr/bin/python  -- replace with python path
+#!/usr/bin/python
 
 #This script takes the field name as argument, and must be run in the directory containing all the mjd directories.
 
@@ -47,9 +47,11 @@ mjds.sort()
 print "number of days to process: ",len(mjds)
 print "total files to process: ",len(mjds)*len(beams)
 
+cube=np.zeros((len(mjds),n2,n1))
+
 for idx,mjd in enumerate(mjds):
     print "processing day ",mjd
-    dayplane=np.zeros((n1,n2))
+    
     for beam in beams:
         tab_path= "./"+mjd+"/"+beam+"/balance0000.dat"
         try:
@@ -63,18 +65,14 @@ for idx,mjd in enumerate(mjds):
         tempra=data['RA']
         for i in range(len(tempdec)):
             if ramin < tempra[i] < ramax and decmin < tempdec[i] < decmax:
-                x= n1-(tempra[i]-ramin)/cellsize
-                y= (tempdec[i]-decmin)/cellsize
-                dayplane[x,y]=1
+                x=int(n1-(tempra[i]-ramin)/cellsize)
+                y=int((tempdec[i]-decmin)/cellsize)
+                cube[idx,y,x]=1
             else:
                 continue
-    if idx == 0:
-        cube = dayplane
-    else:
-        cube = np.dstack([cube,dayplane])
-        print "plane added to existing cube, shape is now ",cube.shape
 
-print "Final cube has shape ",cube.shape
+print "final cube has shape ",cube.shape
+
 
 #outpath_fits="./"
 outfile="track_cube_"+field+".fits"  #change this as required
