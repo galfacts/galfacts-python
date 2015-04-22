@@ -5,6 +5,7 @@
 import numpy as np
 import sys
 import os
+import fnmatch
 from astropy.io import ascii
 from astropy.io import fits
 
@@ -41,7 +42,8 @@ beams=[]
 for b in range(0,7):
     beams.append("beam"+str(b))
 
-mjds=next(os.walk('.'))[1]
+files=next(os.walk('.'))[1]
+mjds=fnmatch.filter(files,'55[0-9][0-9][0-9]')
 mjds.sort()
 
 print "number of days to process: ",len(mjds)
