@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 #This script must be run in the directory containing all the mjd directories.
 
@@ -32,7 +31,7 @@ from astropy.io import fits
 def usage():
     print "Usage of view_tracks.py:"
     print "This script must be run in a directory containing all the mjd directories from cal output, e.g. /researchdata/fhgfs/arecibo-scratch/s1band0/"
-    print "view_tracks.py -l (or --lookup) x y example.npy outputs a list of beam/mjd combinations contributing to the pixel (x,y), if a lookup table is present"
+    print "view_tracks.py -l (or --lookup) x y example.npy field outputs a list of beam/mjd combinations contributing to the pixel (x,y), if a lookup table is present"
     print "view_tracks.py -f (or --fits) outfile.fits field generates a fits cube with one plane per day showing which days contribute to which pixel"
     print "view_tracks.py -t (or --table) outfile field generates a lookup table in binary .npy format which can then be read using the -l flag"
 
@@ -87,37 +86,41 @@ def lookup(x,y,infile,field):
     beams,mjds=get_mjds()
     mjds=np.array(mjds)
     ramin,ramax,decmin,decmax,n1,n2=get_field_params(field)
-    print "Looking up beam/day combinations contributing to pixel ("+x,+","+y+")"
-    bit_int_arr=np.empty((len(beams))
-    for i in range (len(beams)):
-        bit_int_arr[i]=lookup_tab[i,x*n1+y]
-    bit_int_arr.astype(uint32,copy=False)
+    print "Looking up beam/day combinations contributing to pixel ("+x+","+y+")"
+    x_int,y_int=int(x),int(y)
+    bit_int_arr=np.empty(len(beams))
+    for i in range(len(beams)):
+        bit_int_arr[i]=lookup_tab[i,x_int*n1+y_int]
+    bit_int_arr.astype('uint32',copy=False)
     bin_string_arr=[]
-    for i in range (len(beams)):
-        bin_string=bin(bit_int_arr[i])[2:]
+    for i in range(len(beams)):
+        bin_string=bin(bit_int_arr[i].astype('uint32'))[2:]
         bin_string_arr.append(bin_string)
 
     
     table_output=field+'_'+x+'_'+y+'_lookup.txt'
     f=open(table_output,'w')
     f.write("Beam/day combinations corresponding to pixel ("+x+","+y+") \n")
-    for i,beam in enumerate (beams):
-        s=(len(mjds)-len(bin_string_arr[i]))*'0'+bin_string_arr[i])
+    for i,beam in enumerate(beams):
+        s=(len(mjds)-len(bin_string_arr[i]))*'0'+bin_string_arr[i]
         a=np.asarray(list(s),dtype='int').astype(bool)
         mjds_temp=mjds[a]
         f.write("\n")
         f.write(beam+": \n")
         print beam+":"
-        for mjd in a:
-            f.write(mjd+"\n")
-            print mjd
+        if len(mjds_temp)<1:
+            print "none"
+            f.write("none \n")
+        else:
+            for mjd in mjds_temp:
+                f.write(mjd+"\n")
+                print mjd
     f.close()
     print "Output also written to "+table_output
     
     
     
- def make_fits(field,outfile):
-
+def make_fits(field,outfile):
     #get constants, list of beams and mjds
     cellsize=1./60.
     beams,mjds=get_mjds()
@@ -172,7 +175,7 @@ def make_table(field, outfile):
     print "total files to process: ",len(mjds)*len(beams)
 
     #initialise table of values
-    table_array=np.empty((len(beams),n1*n2)
+    table_array=np.empty((len(beams),n1*n2))
     print "Creating lookup table"
 
     #loop over mjds, beams
@@ -200,8 +203,9 @@ def make_table(field, outfile):
         bitwise_map=np.zeros((n2,n1)) #initialise 2d array which will hold info about pixels in a bit-per -bit basis
         for x in range(n1):
             for y in range(n2):
-                bitwise_map[y,x]=np.uint32(int("".join(beam_cube[:,y,x]),2)) #loop over the pixels in the cube, for each pixel the slice along the 3rd dimension gives a len(mjds)-length array of 0s and 1s that gets converted to a 32 or 64 bit unsigned int.
-                table_array[b_ind,:]=np.ravel(bitwise_map) #store this int in an array with (n1*n2) rows and len(beams) columns
+                print x,y
+                bitwise_map[y,x]=np.uint32(int( "".join(np.asarray(beam_cube[:,y,x].astype(int),dtype='str')),2))
+        table_array[b_ind,:]=np.ravel(bitwise_map) #store this int in an array with (n1*n2) rows and len(beams) columns
     print "Writing out lookup table in .npy binary format"
     np.save(outfile,table_array)
 
@@ -210,6 +214,10 @@ def make_table(field, outfile):
     
 
 def main(argv):
+    if len(argv)<1:
+        print "Please provide appropriate arguments"
+        usage()
+        sys.exit(0)
     try:
         opts,args=getopt.getopt(argv,"hlf:t:",["help","lookup","fits=","table="])
     except getopt.GetoptError:
@@ -230,7 +238,7 @@ def main(argv):
             outfile=arg
             field=args[0]
             make_table(field,outfile)
-        elif opt in ("-h","--help")
+        elif opt in ("-h","--help"):
             usage()
             sys.exit(0)
 
