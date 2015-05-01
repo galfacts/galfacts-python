@@ -169,7 +169,7 @@ def make_fits(field,outfile):
     hdu=fits.PrimaryHDU(cube,header=head)
     hdulist=fits.HDUList([hdu])
     hdulist.writeto('outfile')
-)
+
 
 def make_table(field, outfile):
 
