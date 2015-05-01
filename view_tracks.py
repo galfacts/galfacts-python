@@ -158,11 +158,18 @@ def make_fits(field,outfile):
                     continue
 
     print "final cube has shape ",cube.shape
-    ####need to add list of mjds to fits file header
+    
 
     print "Writing fits file to "+outfile
 
-    fits.writeto(outfile,cube)
+    head=fits.Header()
+    head['COMMENT'] = "Ordered list of mjds in cube, one per plane:"
+    for day in mjds:
+        head['COMMENT']=day
+    hdu=fits.PrimaryHDU(cube,header=head)
+    hdulist=fits.HDUList([hdu])
+    hdulist.writeto('outfile')
+)
 
 def make_table(field, outfile):
 
