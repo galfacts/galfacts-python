@@ -94,7 +94,11 @@ def lookup(x,y,infile,field):
     bit_int_arr.astype('uint32',copy=False)
     bin_string_arr=[]
     for i in range(len(beams)):
+<<<<<<< Updated upstream:view_tracks.py
         bin_string=bin(bit_int_arr[i].astype('uint32'))[2:]
+=======
+        bin_string=bin(bit_int_arr[i])[2:]
+>>>>>>> Stashed changes:utils/view_tracks.py
         bin_string_arr.append(bin_string)
 
     
@@ -210,9 +214,14 @@ def make_table(field, outfile):
         bitwise_map=np.zeros((n2,n1)) #initialise 2d array which will hold info about pixels in a bit-per -bit basis
         for x in range(n1):
             for y in range(n2):
+<<<<<<< Updated upstream:view_tracks.py
                 print x,y
                 bitwise_map[y,x]=np.uint32(int( "".join(np.asarray(beam_cube[:,y,x].astype(int),dtype='str')),2))
         table_array[b_ind,:]=np.ravel(bitwise_map) #store this int in an array with (n1*n2) rows and len(beams) columns
+=======
+                bitwise_map[y,x]=np.uint32(int("".join(np.asarray(beam_cube[:,y,x].astype(int),dtype='str')),2)) #loop over the pixels in the cube, for each pixel the slice along the 3rd dimension gives a len(mjds)-length array of 0s and 1s that gets converted to a 32 or 64 bit unsigned int.
+                table_array[b_ind,:]=np.ravel(bitwise_map) #store this int in an array with (n1*n2) rows and len(beams) columns
+>>>>>>> Stashed changes:utils/view_tracks.py
     print "Writing out lookup table in .npy binary format"
     np.save(outfile,table_array)
 
