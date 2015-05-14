@@ -94,11 +94,7 @@ def lookup(x,y,infile,field):
     bit_int_arr.astype('uint32',copy=False)
     bin_string_arr=[]
     for i in range(len(beams)):
-<<<<<<< Updated upstream:view_tracks.py
         bin_string=bin(bit_int_arr[i].astype('uint32'))[2:]
-=======
-        bin_string=bin(bit_int_arr[i])[2:]
->>>>>>> Stashed changes:utils/view_tracks.py
         bin_string_arr.append(bin_string)
 
     
