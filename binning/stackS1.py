@@ -1,9 +1,9 @@
-#!/opt/exp_soft/python-2.7.3/bin/python
+##/opt/exp_soft/python-2.7.3/bin/python
 #Python version of stack2 IDL program created to average down ~300 channel GALFACTS cubes for estimation of noise dependence and angles.
 # run using: python stack2.py path_to_input 
 
 #bad_channels must be a tuple of individual channel numbers and/or slice objects for a range of contiguous channels, e.g. (56,slice(75,96),134,slice(300,321)) will remove channels 57, 76-96, 135, 301-321 based on the cyberSKA viewer indexing which starts at 1.
-
+#last used 07/05/2015 on 3.1.2 galfacts S1
 
 
 import sys
@@ -14,9 +14,9 @@ from astropy.io import fits
 #Get command line argument
 
 filein=sys.argv[1]
-bad=(slice(215,226),248,249,slice(336,355),371)
+bad=(59,60,61,118,119,178,slice(215,227),slice(246,251),slice(336,375))
 
-stokes=filein[34]
+stokes=filein[32]
 
 #Read in fits file
 cube_hdu=fits.open(filein,ignore_missing_end=True)
@@ -46,6 +46,8 @@ nchan_good=nchan-nchan_bad
 print '{0} good channels'.format(nchan_good)
 
 #Create new cube with bad channels completely removed
+
+badchans=badchans.astype('int')
 
 goodchans=np.delete(channels,badchans)
 goodfreq=np.delete(freq,badchans)
@@ -89,6 +91,7 @@ for i_bin in xrange(bins):
 
     err_cube[i_bin]=np.nanstd(goodcube[k0:k1,:,:],axis=0)
 
+    #print goodfreq[k0:k1]
     mfr[i_bin]=np.nanmean(goodfreq[k0:k1])
 
     start_channel[i_bin]=goodchans[k0]
@@ -114,7 +117,7 @@ cube_head['CRPIX3']=(1.0)
 cube_head['CDELT3']=(1.0)
 cube_head['CRVAL3']=(1.0)
 cube_head['BUNIT']=('K')
-cube_head['OBJECT']=('GALFACTS S1 3.1.1 Stokes {0}'.format(stokes))
+cube_head['OBJECT']=('GALFACTS S1 3.1.2 Stokes {0}'.format(stokes))
 #cube_head['CTYPE3']=('FREQUENCY')
 cube_head['ORIGINAL']=(filein,'Original file')
 cube_head['COMMENT']='{0} channels in original'.format(nchan)
@@ -146,7 +149,7 @@ bintablehdu=fits.BinTableHDU.from_columns(cols)
 
 binnedhdulist.append(bintablehdu)
 
-fileout='/scratch/indy/dqa/3.1.1/S1/binned/S1_binned_'+stokes+'.fits'
+fileout='/local/scratch/GALFACTS/3.1.2/s1band0/binned/S1_binned_'+stokes+'.fits'
 
 print '...done!'
 #write to file:

@@ -12,7 +12,7 @@ q_in=sys.argv[2]
 u_in=sys.argv[3]
 v_in=sys.argv[4]
 w_in=sys.argv[5]
-channel=sys.argv[6]
+channel=int(sys.argv[6])
 
 hdu_i=fits.open(i_in)
 hdu_q=fits.open(q_in)
@@ -59,4 +59,4 @@ channel_number=np.ones(s[2])*float(channel)
 
 
 
-np.savetxt('../txt/'+i_in[0:2]+'_ra_noise_'+str(channel)+'.txt',(i_ra_ratio,q_ra_ratio,u_ra_ratio,v_ra_ratio,ra,channel_number))
+np.savetxt('../plots/'+i_in[0:2]+'_ra_noise_'+str(channel)+'.txt',(i_ra_ratio,q_ra_ratio,u_ra_ratio,v_ra_ratio,ra,channel_number))

@@ -15,9 +15,9 @@ from astropy.io import fits
 #Get command line argument
 
 filein=sys.argv[1]
-bad=(147,244,slice(246,252),slice(339,347),357,slice(368,376))
+bad=(59,119,slice(245,251),slice(337,376))
 
-stokes=filein[34]
+stokes=filein[32]
 
 #Read in fits file
 cube_hdu=fits.open(filein,ignore_missing_end=True)
@@ -47,7 +47,7 @@ nchan_good=nchan-nchan_bad
 print '{0} good channels'.format(nchan_good)
 
 #Create new cube with bad channels completely removed
-
+badchans=badchans.astype('int')
 goodchans=np.delete(channels,badchans)
 goodfreq=np.delete(freq,badchans)
 goodcube=cube_im[goodchans,:,:]
@@ -115,7 +115,7 @@ cube_head['CRPIX3']=(1.0)
 cube_head['CDELT3']=(1.0)
 cube_head['CRVAL3']=(1.0)
 cube_head['BUNIT']=('K')
-cube_head['OBJECT']=('GALFACTS N4 3.1.1 Stokes {0}'.format(stokes))
+cube_head['OBJECT']=('GALFACTS N4 3.1.2 Stokes {0}'.format(stokes))
 #cube_head['CTYPE3']=('FREQUENCY')
 cube_head['ORIGINAL']=(filein,'Original file')
 cube_head['COMMENT']='{0} channels in original'.format(nchan)
@@ -148,7 +148,7 @@ bintablehdu=fits.BinTableHDU.from_columns(cols)
 binnedhdulist.append(bintablehdu)
 
 
-fileout='/scratch/indy/dqa/3.1.1/N4/binned/N4_binned_'+stokes+'.fits'
+fileout='/local/scratch/GALFACTS/3.1.2/n4band0/binned/N4_binned_'+stokes+'.fits'
 
 
 print '...done!'

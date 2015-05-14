@@ -15,8 +15,8 @@ from astropy.io import fits
 #Get command line argument
 
 filein=sys.argv[1]
-bad=(slice(0,7),59,slice(248,251),slice(331,354),362,369)
-stokes=filein[34]
+bad=(59,112,178,slice(248,251),slice(331,375))
+stokes=filein[32]
 
 #Read in fits file
 cube_hdu=fits.open(filein,ignore_missing_end=True)
@@ -47,6 +47,7 @@ print '{0} good channels'.format(nchan_good)
 
 #Create new cube with bad channels completely removed
 
+badchans=badchans.astype('int')
 goodchans=np.delete(channels,badchans)
 goodfreq=np.delete(freq,badchans)
 goodcube=cube_im[goodchans,:,:]
@@ -148,7 +149,7 @@ binnedhdulist.append(bintablehdu)
 
 
 
-fileout='/scratch/indy/dqa/3.1.1/S2/binned/S2_binned_'+stokes+'.fits'
+fileout='/local/scratch/GALFACTS/3.1.2/s2band0/binned/S2_binned_'+stokes+'.fits'
 
 
 print '...done!'

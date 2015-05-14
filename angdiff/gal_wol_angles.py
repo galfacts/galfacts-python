@@ -2,8 +2,8 @@
 
 import numpy as np
 import theil_sen as ts
-import matplotlib
-matplotlib.use('MacOSX')
+#import matplotlib
+#matplotlib.use('MacOSX')
 import matplotlib.pylab as plt
 from astropy.io import fits
 import sys
@@ -85,6 +85,23 @@ offsetu=-interceptu/coeffu
 print 'The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
 print 'The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
 
+galq_head=header_template.copy()
+galu_head=header_template.copy()
+
+
+galq_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
+galu_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
+
+galq_head['COMMENT']='The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
+galu_head['COMMENT']='The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
+
+galqfileout=field+'_galfacts_q_corrected.fits'
+galufileout=field+'_galfacts_u_corrected.fits'
+
+print 'Writing out corrected Q & U maps'
+
+fits.writeto(galqfileout,galq,header=galq_head)
+fits.writeto(galufileout,galu,header=galu_head)
 
 ## matplotlib.rcParams.update({'font.size':14})
 ## fig,axes=plt.subplots(1,2,figsize=(10,5),squeeze=True)

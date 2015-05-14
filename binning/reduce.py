@@ -1,4 +1,4 @@
-#!/opt/exp_soft/python-2.7.3/bin/python
+#/opt/exp_soft/python-2.7.3/bin/python
 
 #Reduces a binned cube to a single-frequency map, averaged between specified channels, syntax reduce.py cube start end
 

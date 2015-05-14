@@ -1,4 +1,4 @@
-#!/Users/leclercq/miniconda/bin/python
+#/Users/leclercq/miniconda/bin/python
 
 import sys
 import numpy as np 
@@ -62,7 +62,7 @@ v_noise_ratio=v_noise/w_scaled
 
 mfr=hdu_i[2].data.field(3)
 
-outfile="./plots/"+i_in[0:2]+"_binned_noise_newtime.txt"
+outfile="../plots/"+i_in[0:2]+"_binned_noise_newtime.txt"
 
 np.savetxt(outfile, (i_noise_ratio,q_noise_ratio,u_noise_ratio,v_noise_ratio,mfr))
 

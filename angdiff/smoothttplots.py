@@ -1,9 +1,9 @@
-#!/Users/leclercq/miniconda/bin/python
+#/Users/leclercq/miniconda/bin/python
 
 import numpy as np
 import theil_sen as ts
-import matplotlib
-matplotlib.use('MacOSX')
+#import matplotlib
+#matplotlib.use('MacOSX')
 import matplotlib.pylab as plt
 from astropy.io import fits
 import sys
@@ -11,7 +11,7 @@ from numpy import pi
 
 print 'Reading in data...'
 
-###Open Q and U maps from both GALFACTS and DRAO - input is galfacts q, wolleben q, galfacts u, wolleben u, galfacts error q, galfacts error u
+###Open Q and U maps from both GALFACTS and DRAO - input is galfacts q, wolleben q, galfacts u, wolleben u
 galqhdu=fits.open(sys.argv[1])
 wolqhdu=fits.open(sys.argv[2])
 galuhdu=fits.open(sys.argv[3])
@@ -82,33 +82,33 @@ offsetu=-interceptu/coeffu
 
 
 
-print 'The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
-print 'The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
+print 'The GALFACTS ',field,' Q data contains a spurious offset of {0} K'.format(offsetq)
+print 'The GALFACTS ',field,' U data contains a spurious offset of {0} K'.format(offsetu)
 
 
 ##Remove offset:
 
-galq=galq-offsetq
-galu=galu-offsetu
+#galq=galq-offsetq
+#galu=galu-offsetu
 
 
 #write FITS files
 
-galq_head=header_template.copy()
-galu_head=header_template.copy()
+#galq_head=header_template.copy()
+#galu_head=header_template.copy()
 
 
-galq_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
-galu_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
+#galq_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
+#galu_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
 
-galq_head['COMMENT']='The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
-galu_head['COMMENT']='The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
+#galq_head['COMMENT']='The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
+#galu_head['COMMENT']='The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
 
-galqfileout=field+'_galfacts_q_corrected.fits'
-galufileout=field+'_galfacts_u_corrected.fits'
+#galqfileout=field+'_galfacts_q_corrected.fits'
+#galufileout=field+'_galfacts_u_corrected.fits'
 
-fits.writeto(galqfileout,galq,header=galq_head)
-fits.writeto(galufileout,galu,header=galu_head)
+#fits.writeto(galqfileout,galq,header=galq_head)
+#fits.writeto(galufileout,galu,header=galu_head)
 
 
 

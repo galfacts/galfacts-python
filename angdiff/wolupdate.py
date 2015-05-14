@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#/usr/local/bin/python
 
 import numpy as np
 from astropy.io import fits
