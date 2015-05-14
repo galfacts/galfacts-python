@@ -32,8 +32,8 @@ def usage():
     print "Usage of view_tracks.py:"
     print "This script must be run in a directory containing all the mjd directories from cal output, e.g. /researchdata/fhgfs/arecibo-scratch/s1band0/"
     print "view_tracks.py -l (or --lookup) x y example.npy field outputs a list of beam/mjd combinations contributing to the pixel (x,y), if a lookup table is present"
-    print "view_tracks.py -f (or --fits) outfile.fits field generates a fits cube with one plane per day showing which days contribute to which pixel"
-    print "view_tracks.py -t (or --table) outfile field generates a lookup table in binary .npy format which can then be read using the -l flag"
+    print "view_tracks.py -f (or --fits) track_cube_example.fits field generates a fits cube with one plane per day showing which days contribute to which pixel"
+    print "view_tracks.py -t (or --table) table_example field generates a lookup table in binary .npy format which can then be read using the -l flag"
 
 def get_mjds():
     beams=[]
@@ -210,14 +210,9 @@ def make_table(field, outfile):
         bitwise_map=np.zeros((n2,n1)) #initialise 2d array which will hold info about pixels in a bit-per -bit basis
         for x in range(n1):
             for y in range(n2):
-<<<<<<< Updated upstream:view_tracks.py
-                print x,y
-                bitwise_map[y,x]=np.uint32(int( "".join(np.asarray(beam_cube[:,y,x].astype(int),dtype='str')),2))
-        table_array[b_ind,:]=np.ravel(bitwise_map) #store this int in an array with (n1*n2) rows and len(beams) columns
-=======
                 bitwise_map[y,x]=np.uint32(int("".join(np.asarray(beam_cube[:,y,x].astype(int),dtype='str')),2)) #loop over the pixels in the cube, for each pixel the slice along the 3rd dimension gives a len(mjds)-length array of 0s and 1s that gets converted to a 32 or 64 bit unsigned int.
                 table_array[b_ind,:]=np.ravel(bitwise_map) #store this int in an array with (n1*n2) rows and len(beams) columns
->>>>>>> Stashed changes:utils/view_tracks.py
+
     print "Writing out lookup table in .npy binary format"
     np.save(outfile,table_array)
 
