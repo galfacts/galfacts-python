@@ -3,9 +3,14 @@
 import numpy as np
 from astropy.io import fits
 import sys
+<<<<<<< HEAD
 infile=sys.argv[1]
 
 hdu1=fits.open(infile)
+=======
+
+hdu1=fits.open(sys.argv[1])
+>>>>>>> 8e2ea9df266fdd771cdf83274b86957257ec3345
 cube=hdu1[0].data
 head=hdu1[0].header
 mfrs=hdu1[2].data.field(3)

@@ -1,4 +1,4 @@
-#!/Users/leclercq/miniconda/bin/python
+#/Users/leclercq/miniconda/bin/python
 
 import numpy as np
 import theil_sen as ts
