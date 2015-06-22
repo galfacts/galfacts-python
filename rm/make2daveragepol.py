@@ -1,16 +1,16 @@
 #!/Users/leclercq/miniconda/bin/python
 
 import numpy as np
-import theil_sen as ts
-import matplotlib
-matplotlib.use('MacOSX')
-import matplotlib.pylab as plt
+#import theil_sen as ts
+#import matplotlib
+#matplotlib.use('MacOSX')
+#import matplotlib.pylab as plt
 from astropy.io import fits
 import sys
 from numpy import pi
 
 infile=sys.argv[1]
-field=infile[9:11]
+field=sys.argv[3]
 
 qin=fits.open(sys.argv[1])
 uin=fits.open(sys.argv[2])

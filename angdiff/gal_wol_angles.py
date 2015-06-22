@@ -95,8 +95,13 @@ galu_head['OBJECT']=('GALFACTS '+field+' TTcorrected')
 galq_head['COMMENT']='The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
 galu_head['COMMENT']='The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
 
-galqfileout=field+'_galfacts_q_corrected.fits'
-galufileout=field+'_galfacts_u_corrected.fits'
+galqfileout=field+'_q_corrected.fits'
+galufileout=field+'_u_corrected.fits'
+
+##Remove offset:
+
+galq=galq-offsetq
+galu=galu-offsetu
 
 print 'Writing out corrected Q & U maps'
 
@@ -132,11 +137,6 @@ galuerrhdu=fits.open(sys.argv[6])
 galqerr=galqerrhdu[0].data
 galuerr=galuerrhdu[0].data
 
-##Remove offset:
-
-galq=galq-offsetq
-galu=galu-offsetu
-
 print 'Now making angle maps'
 
 ###Make galfacts angle map and associated errormaps etc.
@@ -164,8 +164,9 @@ angle_diff_deg=angle_diff*180./pi
 #Compute total combined error on the difference, related weight
 angle_err=np.sqrt(galfacts_angle_error**2+wol_angle_error**2)
 angle_err_deg=angle_err*180./pi
-mean_err_deg=np.nanmean(angle_err_deg)
 angweight=1/angle_err**2
+err_avg=1./(np.sqrt(np.nansum(angweight)))
+err_avg_deg=err_avg*180./pi
 
 #print np.shape(angweight)
 #print np.shape(angle_diff)
@@ -207,7 +208,7 @@ diffmap_head['OBJECT']=('GALFACTS-Wolleben '+field+' angle difference map')
 differr_head['OBJECT']=('GALFACTS-Wolleben '+field+' angle difference error map')
 
 diffmap_head['COMMENT']='Weighted average difference:{0} degrees'.format(weighted_diff_average_deg)
-diffmap_head['COMMENT']='Mean error:{0} degrees'.format(mean_err_deg)
+diffmap_head['COMMENT']='Mean error:{0} degrees'.format(err_avg_deg)
 diffmap_head['COMMENT']='The GALFACTS Q data contains a spurious offset of {0} K'.format(offsetq)
 diffmap_head['COMMENT']='The GALFACTS U data contains a spurious offset of {0} K'.format(offsetu)
 
@@ -222,5 +223,5 @@ fits.writeto(galangfileout,galfacts_angle_deg,header=galang_head)
 fits.writeto(wolangfileout,wolleben_angle_deg,header=wolang_head)
 
 
-print "The weighted angle difference between the two maps is {0} rad or {1} degrees".format(weighted_diff_average,weighted_diff_average_deg)
+print "The weighted angle difference between the two maps is {0} rad or {1} degrees, plus/minus {2} degrees".format(weighted_diff_average,weighted_diff_average_deg,err_avg_deg)
 

@@ -8,13 +8,18 @@ import aplpy
 
 fig = mpl.figure(figsize=(14,7))
 
-f1 = aplpy.FITSFigure('S3_polarised_intensity.fits', figure=fig)
+f1 = aplpy.FITSFigure('N4_polarised_intensity.fits', figure=fig)
 
 f1.tick_labels.set_font(size='x-small')
 f1.axis_labels.set_font(size='small')
-f1.show_colorscale(cmap='gist_heat')
+f1.show_colorscale(cmap='afmhot')
 f1.add_colorbar()
 f1.colorbar.set_axis_label_text('brightness [K]')
+f1.show_rectangles(0,32,1000,1000)
+f1.show_rectangles(1000,32,1000,1000)
+f1.show_rectangles(2000,32,1000,1000)
+f1.show_rectangles(3000,32,1000,1000)
+f1.show_rectangles(4000,32,1000,1000)
 
 ## f2 = aplpy.FITSFigure('S2rm0.fits', figure=fig,
 ##                       subplot=[0.1, 0.4, 0.9, 0.3])
@@ -40,4 +45,4 @@ f1.colorbar.set_axis_label_text('brightness [K]')
 ## f2.axis_labels.hide_x()
 ## f2.tick_labels.hide_x()
 
-fig.savefig('s3pol.pdf', bbox_inches='tight')
+fig.savefig('n4pol_withchunks.pdf', bbox_inches='tight')
